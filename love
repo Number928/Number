@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>是否同意做 Number 的对象</title>
+  <meta name="description" content="一个温柔可爱的表白小网页，‘不可以’总是躲开，‘好的’会越来越可爱～" />
+  <meta name="theme-color" content="#ff8fb3" />
+  <!-- 分享/预览 -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="是否同意做 Number 的对象">
+  <meta property="og:description" content="点‘不可以’会逃走；‘好的’越点越大，快来答应吧～">
+  <!-- 提示：上线后把 og:image 换成你的绝对链接 -->
+  <meta property="og:image" content="og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- 简单可爱的 Favicon（内联 SVG） -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path fill="%23ff8fb3" d="M47 8c-6 0-9 4-15 10C26 12 23 8 17 8 9 8 4 14 4 22c0 15 23 26 28 34 5-8 28-19 28-34 0-8-5-14-13-14z"/></svg>'>
+  <style>
+    :root{
+      --bg-1:#fff1f6; --bg-2:#f0f6ff; --bg-3:#fff8ea;
+      --pink:#ff8fb3; --pink-2:#ff6fa0; --peach:#ffb3c7;
+      --text:#5b5b5b; --shadow: 0 10px 30px rgba(255,143,179,.25), 0 6px 16px rgba(0,0,0,.06);
+      --radius: 22px; --space: clamp(14px,3vw,22px); --btn-h: 56px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei UI","Noto Sans CJK SC","Helvetica Neue",Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 900px at 10% -10%, var(--bg-1), transparent 60%),
+        radial-gradient(1200px 900px at 110% 10%, var(--bg-2), transparent 55%),
+        radial-gradient(1000px 800px at 50% 120%, var(--bg-3), transparent 50%),
+        linear-gradient(135deg, #fff 0%, #fff5fb 100%);
+      overflow-x:hidden;
+    }
+    .bg-hearts{position:fixed;inset:0;pointer-events:none;z-index:0;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255,182,205,.35) 0 6px, transparent 7px),
+        radial-gradient(circle at 80% 30%, rgba(201,198,255,.28) 0 5px, transparent 6px),
+        radial-gradient(circle at 30% 80%, rgba(255,206,160,.28) 0 7px, transparent 8px);
+      background-size:180px 180px,220px 220px,240px 240px; filter: blur(.2px);
+    }
+    main{
+      position:relative; z-index:1; min-height:100%;
+      display:flex; align-items:center; justify-content:center;
+      padding:
+        calc(env(safe-area-inset-top) + var(--space))
+        calc(env(safe-area-inset-right) + var(--space))
+        calc(env(safe-area-inset-bottom) + var(--space))
+        calc(env(safe-area-inset-left) + var(--space));
+    }
+    .card{
+      width:min(680px,94vw);
+      background:rgba(255,255,255,.66);
+      border:1px solid rgba(255,182,205,.55);
+      border-radius:24px; box-shadow:var(--shadow);
+      padding:clamp(18px,4vw,36px); backdrop-filter: blur(10px) saturate(120%);
+      position:relative;
+    }
+    .card::after{content:"";position:absolute;inset:-2px;border-radius:26px;
+      background:linear-gradient(135deg, rgba(255,143,179,.15), rgba(201,198,255,.12));
+      z-index:-1; filter: blur(8px);
+    }
+    h1{margin:4px 0 10px;font-size:clamp(22px,5.2vw,32px);color:#e26093;
+      text-shadow:0 1px 0 #fff, 0 4px 14px rgba(255,111,160,.25); letter-spacing:.5px; line-height:1.25; text-align:center;
+    }
+    .sub{ text-align:center; margin:0 0 18px; font-size:clamp(14px,3.4vw,16px); opacity:.8; }
+    .btns{ margin-top:14px; display:flex; gap:12px; justify-content:center; align-items:center; min-height:calc(var(--btn-h) + 12px); padding:12px 0; }
+    .btn{
+      position:relative; height:var(--btn-h); padding:0 20px; border:0; border-radius:999px;
+      font-size:clamp(16px,4.2vw,18px); font-weight:700; cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,0,0,.08), 0 10px 30px rgba(255,143,179,.25);
+      transform: translateZ(0);
+      transition: transform .18s ease, box-shadow .18s ease, background .3s ease, color .3s ease, opacity .25s ease, left .2s ease, top .2s ease;
+      user-select:none; -webkit-tap-highlight-color:transparent; touch-action: manipulation;
+    }
+    .btn:active{ transform: translateY(1px) scale(.98); box-shadow:0 2px 10px rgba(0,0,0,.06); }
+    .yes{ background:linear-gradient(135deg, var(--pink), var(--pink-2)); color:#fff; }
+    .yes::after{ content:""; position:absolute; inset:-4px; border-radius:inherit;
+      background: radial-gradient(120px 60px at 50% -20%, rgba(255,255,255,.55), transparent 70%);
+      pointer-events:none;
+    }
+    .no{ background:linear-gradient(135deg, #e7f2ff, #f3f6ff); color:#6b7a90; border:1px solid rgba(158,208,255,.45); }
+    .note{ margin-top:14px; text-align:center; font-size:13px; color:#a07f91; }
+    .overlay{ position:fixed; inset:0; z-index:999; display:none; place-items:center; background:rgba(255,240,246,.6); backdrop-filter: blur(6px); }
+    .overlay.show{ display:grid; animation: fadeIn .28s ease both }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    .popup{ width:min(560px,92vw); background:#fff; border-radius:22px; padding:26px 20px;
+      border:1px solid rgba(255,143,179,.35); box-shadow:var(--shadow); text-align:center; }
+    .popup h2{ margin:0 0 10px; font-size:clamp(22px,5vw,28px); color:#e26093 }
+    .popup p{ margin:0 0 16px; font-size:clamp(14px,3.8vw,16px); color:#7a5f6b }
+    .popup .hug{ margin-top:6px; height:48px; padding:0 22px; border-radius:999px; border:0; color:#fff; font-weight:800;
+      background:linear-gradient(135deg, var(--pink), var(--peach)); box-shadow:var(--shadow); cursor:pointer; }
+    .heart{ position:fixed; width:14px;height:14px; transform:rotate(45deg); background: currentColor; color:#ff88b0; left:0; top:0; pointer-events:none; z-index:998; border-radius:2px 0 0 0;
+      animation: floatUp 1.2s ease-out forwards; box-shadow:-7px 0 0 0 currentColor, 0 -7px 0 0 currentColor; }
+    @keyframes floatUp{ from{ transform: translateY(0) rotate(45deg) scale(.8); opacity:.95 } to{ transform: translateY(-80px) rotate(45deg) scale(1.2); opacity:0 } }
+    .pulse{ animation: pulse .8s ease-in-out both; }
+    @keyframes pulse{ 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1)} }
+    @media (max-width:420px){ .btns{ gap:10px } .btn{ padding:0 16px } }
+  </style>
+</head>
+<body>
+  <div class="bg-hearts"></div>
+  <main>
+    <section class="card" aria-live="polite">
+      <h1 id="title">是否同意做 <span id="who">Number</span> 的对象？</h1>
+      <p class="sub"></p>
+      <div class="btns" id="stage">
+        <button id="yes" class="btn yes" type="button" aria-label="好的">好的</button>
+        <button id="no" class="btn no" type="button" aria-label="不可以">不可以</button>
+      </div>
+      <p class="note"></p>
+    </section>
+  </main>
+
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true">
+    <div class="popup">
+      <h2 id="okTitle">好耶！牵手成功～</h2>
+      <p id="okText">从现在起你就是 <b id="okWho">Number</b> 的对象啦！</p>
+      <button class="hug" id="hugBtn">꒰｡•◡•｡꒱ 给你大抱抱！</button>
+    </div>
+  </div>
+
+  <script>
+    // 支持 ?name=昵称 自定义称呼
+    const params = new URLSearchParams(location.search);
+    const customName = (params.get('name') || '').trim();
+    const who = document.getElementById('who');
+    const okWho = document.getElementById('okWho');
+    if(customName){ who.textContent = customName; okWho.textContent = customName; }
+
+    const stage = document.getElementById('stage');
+    const yesBtn = document.getElementById('yes');
+    const noBtn  = document.getElementById('no');
+    const overlay = document.getElementById('overlay');
+    const okTitle = document.getElementById('okTitle');
+    const okText  = document.getElementById('okText');
+    const hugBtn  = document.getElementById('hugBtn');
+
+    const lines = [
+      "求求你考虑一下 (｡•́︿•̀｡)",
+      "拜托啦～(ฅ´ω`ฅ)",
+      "再给我一次机会嘛",
+      "不当我的对象不行哦～",
+      "给你小心心 ♥",
+      "答应我好不好 (>_<)",
+      "就现在！现在就答应！",
+      "我会超级超级温柔的！",
+      "Yes Yes Yes! ♡"
+    ];
+
+    let tries = 0, yesScale = 1, lastRun = 0;
+
+    const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+    const now = () => performance.now();
+
+    function nextLine(){
+      const idx = clamp(tries - 1, 0, lines.length - 1);
+      return lines[idx];
+    }
+
+    function bumpYes(){
+      tries++;
+      yesScale = clamp(1 + tries * 0.14, 1, 2.4);
+      yesBtn.style.transform = `scale(${yesScale})`;
+      yesBtn.classList.remove('pulse'); void yesBtn.offsetWidth; yesBtn.classList.add('pulse');
+      yesBtn.textContent = nextLine();
+      const shrink = clamp(1 - tries * 0.05, 0.7, 1); // 不会太小，避免“消失”的感觉
+      noBtn.style.transform = `scale(${shrink})`;
+      noBtn.style.opacity = String(clamp(1 - tries * 0.04, .65, 1)); // 保持可见
+      scatterHearts(2);
+    }
+
+    function heartAt(x,y,color){
+      const h = document.createElement('span');
+      h.className = 'heart'; if(color) h.style.color = color;
+      h.style.left = x + 'px'; h.style.top = y + 'px';
+      document.body.appendChild(h); setTimeout(()=>h.remove(), 1200);
+    }
+    function scatterHearts(n=5){
+      const rect = yesBtn.getBoundingClientRect();
+      for(let i=0;i<n;i++){
+        const x = rect.left + rect.width/2 + (Math.random()*rect.width - rect.width/2)*0.6;
+        const y = rect.top + rect.height/2 + (Math.random()*rect.height - rect.height/2)*0.6;
+        const palette = ['#ff88b0','#ffb3c7','#c9c6ff','#ffc2de','#ff9dc0'];
+        heartAt(x, y, palette[Math.floor(Math.random()*palette.length)]);
+      }
+    }
+
+    // 获取可视区域（兼容手机键盘/缩放）
+    function viewportBox(){
+      const vv = window.visualViewport;
+      if(vv){
+        return { x:0, y:0, w: vv.width, h: vv.height };
+      }
+      return { x:0, y:0, w: window.innerWidth, h: window.innerHeight };
+    }
+
+    // 让“不可以”逃跑：固定定位在视口内随机位置，避开指针和“好的”
+    function runAway(e){
+      const t = now();
+      if(t - lastRun < 120) { // 轻微节流，避免抖动
+        if(e) { e.preventDefault(); e.stopPropagation(); }
+        return;
+      }
+      lastRun = t;
+      if(e){ e.preventDefault(); e.stopPropagation(); }
+
+      bumpYes();
+
+      const vp = viewportBox();
+      const yesR = yesBtn.getBoundingClientRect();
+      const noR  = noBtn.getBoundingClientRect();
+      const pad = 10;   // 贴边余量
+      const avoid = 60; // 与目标的最小间距
+      const pointer = {
+        x: (e?.clientX ?? (yesR.left + yesR.width/2)),
+        y: (e?.clientY ?? (yesR.top + yesR.height/2))
+      };
+
+      // 切换为固定定位，确保不“消失”
+      if(getComputedStyle(noBtn).position !== 'fixed'){
+        noBtn.style.position = 'fixed';
+        noBtn.style.zIndex = '1000';
+      }
+
+      let left = 0, top = 0, triesPos = 0;
+      const maxLeft = vp.w - noR.width  - pad;
+      const maxTop  = vp.h - noR.height - pad;
+
+      function farEnough(l, t){
+        const cx = l + noR.width/2;
+        const cy = t + noR.height/2;
+        const dPointer = Math.hypot(cx - pointer.x, cy - pointer.y);
+        const dYesX = Math.max(0, Math.max(yesR.left - (l + noR.width), l - yesR.right));
+        const dYesY = Math.max(0, Math.max(yesR.top - (t + noR.height), t - yesR.bottom));
+        const dYes = Math.hypot(dYesX, dYesY);
+        return dPointer > avoid && dYes > avoid;
+      }
+
+      do{
+        left = clamp(Math.random() * maxLeft, pad, maxLeft);
+        top  = clamp(Math.random() * maxTop,  pad, maxTop);
+        triesPos++;
+        if(triesPos > 60) break;
+      }while(!farEnough(left, top));
+
+      noBtn.style.left = left + 'px';
+      noBtn.style.top  = top  + 'px';
+    }
+
+    // 拦截所有会触发点击的尝试：无限次，但就是点不到
+    ['pointerdown','pointerup','click','touchstart','mouseenter','mouseover','focus','keydown'].forEach(evt=>{
+      noBtn.addEventListener(evt, (e)=>{
+        if(e.type === 'keydown'){
+          const k = e.key?.toLowerCase?.();
+          if(k === 'enter' || k === ' ') { runAway(e); return; }
+        }
+        runAway(e);
+      }, {passive:false});
+    });
+
+    // 鼠标靠近也逃跑（桌面端）
+    stage.addEventListener('mousemove', (e)=>{
+      const r = noBtn.getBoundingClientRect();
+      const d = Math.hypot(e.clientX - (r.left + r.width/2), e.clientY - (r.top + r.height/2));
+      if(d < 90) runAway(e);
+    });
+
+    // 窗口变化时也把“不可以”拉回视口内
+    window.addEventListener('resize', ()=>{
+      if(getComputedStyle(noBtn).position === 'fixed'){
+        const vp = viewportBox();
+        const noR = noBtn.getBoundingClientRect();
+        noBtn.style.left = clamp(parseFloat(noBtn.style.left||'0'), 10, Math.max(10, vp.w - noR.width - 10)) + 'px';
+        noBtn.style.top  = clamp(parseFloat(noBtn.style.top||'0'),  10, Math.max(10, vp.h - noR.height - 10)) + 'px';
+      }
+    });
+
+    // “好的”被点击：成功弹窗 + 飘心
+    yesBtn.addEventListener('click', ()=>{
+      scatterHearts(14);
+      okTitle.textContent = "好耶！牵手成功～";
+      okText.innerHTML = `从现在起你就是 <b>${who.textContent}</b> 的对象啦！`;
+      overlay.classList.add('show');
+      // 让“好的”居中更大
+      yesBtn.style.transform = `scale(${Math.max(yesScale, 2.0)})`;
+      yesBtn.textContent = '我愿意！(〃∀〃)♡';
+      setTimeout(()=>scatterHearts(18), 120);
+      setTimeout(()=>scatterHearts(12), 280);
+    });
+
+    hugBtn.addEventListener('click', ()=>{
+      const r = hugBtn.getBoundingClientRect();
+      for(let i=0;i<16;i++){
+        heartAt(r.left + Math.random()*r.width, r.top + Math.random()*r.height);
+      }
+    });
+
+    // 初始轻轻吸引一下“好的”
+    setTimeout(()=> yesBtn.classList.add('pulse'), 400);
+  </script>
+</body>
+</html>
